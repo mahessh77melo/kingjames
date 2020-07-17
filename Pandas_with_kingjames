@@ -1,0 +1,55 @@
+# %% codecell
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+leb=pd.read_excel(r'C:\Users\Magesh\lebron_career.csv.xlsx')
+# %% codecell
+leb.head()
+# %% codecell
+leb.columns
+
+# %% codecell
+leb['drb'].sum()
+# %% codecell
+leb['game'].count()
+# %% codecell
+#total points on christmas matches
+leb[leb['date'].apply(lambda x:str(x)[5:10]=='12-25')]['pts'].sum()
+# %% codecell
+#total wins on christmas day
+u=leb['date'].apply(lambda x:str(x)[5:10]=='12-25')
+leb[u & leb['result'].apply(lambda x : str(x)[0]=='W')]['game'].count()
+
+#christas match win percentage
+leb[u & leb['result'].apply(lambda x : str(x)[0]=='W')]['game'].count()*100/leb[u]['game'].count()
+
+# %% codecell
+#getting the date of lebron's largest victory (by pt-dif)
+t=leb['result'].apply(lambda c:int(c[3:-1]))
+#storing the values as a series and after changing the string values to integers.
+t.max()
+# %% codecell
+t.min()
+# %% codecell
+#longest 55% fg streak
+t=leb['fgp']>=0.55
+# %% codecell
+#Lebron's Longest streak of 60% fg and 30 pts
+cv=0
+cl=[]
+for i in range(len(leb)):
+    if leb['fgp'][i] >= 0.6 and leb['pts'][i]>=30 :
+        cv+=1
+    else :
+        cl.append([cv,i-cv,i])
+        cv=0
+max(cl)
+print("The Longest 30 pt + 60% streak is ",max(cl)[0]," games.")
+# %%codecell
+# And displaying the dataframe
+leb[max(cl)[1]:max(cl)[2]]
+# %% codecell
+#And for real, he broke his streak with a 39 pt performance and a 14/24 game.  oooooffff!!!!
+leb.iloc[738]
